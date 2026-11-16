@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block title %}{{ site_title }}{% endblock %}</title>
+<meta name="description" content="{% block description %}{{ site_tagline }}{% endblock %}">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@700;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ root }}assets/style.css">
+</head>
+<body>
+<div class="hazard-strip" aria-hidden="true"></div>
+<header class="site-header">
+  <a class="site-name" href="{{ root }}index.html">{{ site_title }}</a>
+  <nav aria-label="分類">
+    {% for cat, ps in groups %}<a href="{{ root }}index.html#cat-{{ loop.index }}">{{ cat }}</a>{% endfor %}
+  </nav>
+</header>
+{% block body %}{% endblock %}
+<footer class="site-footer">
+  <p>本站內容僅供學習統計方法之用，所有圖表皆為固定種子的模擬資料，不構成任何投資建議。</p>
+  <p>© {{ year }} {{ site_title }}。新增內容的規則請見專案中的 AGENTS.md。</p>
+</footer>
+<script src="{{ root }}assets/lab.js"></script>
+{% block scripts %}{% endblock %}
+</body>
+</html>

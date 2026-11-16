@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block body %}
+<main class="home">
+  <section class="hero">
+    <div class="hero-text">
+      <h1>你用的指標，<br>悄悄假設了什麼？</h1>
+      <p class="hero-lead">z-score、移動平均、布林通道、相關係數，每一個都帶著對資料的假設。市場資料常常不符合這些假設，而指標不會提醒你。這本圖鑑一頁拆解一個方法：它假設了什麼、哪裡會壞掉、可以改用什麼。</p>
+      <p class="hero-hint">先玩右邊這個：把最大那根跳動往上拉，看第二大的事件怎麼從偵測中消失。</p>
+    </div>
+    <div class="lab lab-hero" data-demo="hero"><noscript>這個互動實驗需要開啟 JavaScript。</noscript></div>
+  </section>
+
+  {% for cat, ps in groups %}
+  <section class="cat" id="cat-{{ loop.index }}">
+    <h2>{{ cat }}</h2>
+    <div class="cards">
+      {% for p in ps %}
+      <a class="card" href="methods/{{ p.slug }}.html">
+        <div class="card-top">
+          <span class="severity sev-{{ p.meta.severity }}" title="踩雷指數 {{ p.meta.severity }} / 3">
+            <span class="sr-only">踩雷指數 {{ p.meta.severity }} / 3：</span>{% for i in range(3) %}<i class="{{ 'on' if i < p.meta.severity else '' }}"></i>{% endfor %}
+            <span class="severity-text">{{ severity_label[p.meta.severity] }}</span>
+          </span>
+        </div>
+        <h3>{{ p.meta.title }}</h3>
+        <p class="card-en">{{ p.meta.title_en }}</p>
+        <p class="card-summary">{{ p.meta.summary }}</p>
+        <ul class="chips">{% for a in p.meta.assumptions %}<li>{{ a }}</li>{% endfor %}</ul>
+      </a>
+      {% endfor %}
+    </div>
+  </section>
+  {% endfor %}
+
+  <section class="how">
+    <h2>每一頁都長得一樣</h2>
+    <ol class="how-steps">
+      {% for s in sections %}<li>{{ s }}</li>{% endfor %}
+    </ol>
+    <p>固定的六個段落讓你可以快速比較不同方法，也讓這個網站可以持續擴充：新的方法頁只要照同一套規則撰寫，首頁、分類與目錄都會自動更新。</p>
+  </section>
+</main>
+{% endblock %}
+{% block scripts %}<script src="assets/hero.js"></script>{% endblock %}

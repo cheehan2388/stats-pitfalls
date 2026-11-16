@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>統計方法踩雷圖鑑</title>
+<meta name="description" content="指標沒有錯，錯的是我們沒問它假設了什麼。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@700;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<div class="hazard-strip" aria-hidden="true"></div>
+<header class="site-header">
+  <a class="site-name" href="index.html">統計方法踩雷圖鑑</a>
+  <nav aria-label="分類">
+    <a href="index.html#cat-1">離群值偵測</a><a href="index.html#cat-2">平滑與趨勢</a><a href="index.html#cat-3">波動與通道</a><a href="index.html#cat-4">關聯與迴歸</a>
+  </nav>
+</header>
+
+<main class="home">
+  <section class="hero">
+    <div class="hero-text">
+      <h1>你用的指標，<br>悄悄假設了什麼？</h1>
+      <p class="hero-lead">z-score、移動平均、布林通道、相關係數，每一個都帶著對資料的假設。市場資料常常不符合這些假設，而指標不會提醒你。這本圖鑑一頁拆解一個方法：它假設了什麼、哪裡會壞掉、可以改用什麼。</p>
+      <p class="hero-hint">先玩右邊這個：把最大那根跳動往上拉，看第二大的事件怎麼從偵測中消失。</p>
+    </div>
+    <div class="lab lab-hero" data-demo="hero"><noscript>這個互動實驗需要開啟 JavaScript。</noscript></div>
+  </section>
+
+  
+  <section class="cat" id="cat-1">
+    <h2>離群值偵測</h2>
+    <div class="cards">
+      
+      <a class="card" href="methods/z-score.html">
+        <div class="card-top">
+          <span class="severity sev-3" title="踩雷指數 3 / 3">
+            <span class="sr-only">踩雷指數 3 / 3：</span><i class="on"></i><i class="on"></i><i class="on"></i>
+            <span class="severity-text">結論可能相反</span>
+          </span>
+        </div>
+        <h3>z-score 離群偵測</h3>
+        <p class="card-en">Z-score Outlier Detection</p>
+        <p class="card-summary">你想抓的離群值會先把標準差撐大，然後躲在被撐大的標準差後面，讓自己看起來很正常。</p>
+        <ul class="chips"><li>常態分布</li><li>尺度估計沒被污染</li><li>平穩性</li></ul>
+      </a>
+      
+    </div>
+  </section>
+  
+  <section class="cat" id="cat-2">
+    <h2>平滑與趨勢</h2>
+    <div class="cards">
+      
+      <a class="card" href="methods/moving-average.html">
+        <div class="card-top">
+          <span class="severity sev-2" title="踩雷指數 2 / 3">
+            <span class="sr-only">踩雷指數 2 / 3：</span><i class="on"></i><i class="on"></i><i class=""></i>
+            <span class="severity-text">訊號經常失真</span>
+          </span>
+        </div>
+        <h3>移動平均</h3>
+        <p class="card-en">Simple Moving Average</p>
+        <p class="card-summary">均線永遠落後價格大約半個視窗；想讓它反應快一點，盤整時的假訊號就會跟著變多。</p>
+        <ul class="chips"><li>區間內水準不變</li><li>雜訊互相抵消</li><li>沒有極端值</li></ul>
+      </a>
+      
+    </div>
+  </section>
+  
+  <section class="cat" id="cat-3">
+    <h2>波動與通道</h2>
+    <div class="cards">
+      
+      <a class="card" href="methods/bollinger-bands.html">
+        <div class="card-top">
+          <span class="severity sev-3" title="踩雷指數 3 / 3">
+            <span class="sr-only">踩雷指數 3 / 3：</span><i class="on"></i><i class="on"></i><i class="on"></i>
+            <span class="severity-text">結論可能相反</span>
+          </span>
+        </div>
+        <h3>布林通道</h3>
+        <p class="card-en">Bollinger Bands</p>
+        <p class="card-summary">「價格有 95% 的時間在通道內」和「碰到上軌就會回檔」，這兩句常見的說法在趨勢行情中都不成立。</p>
+        <ul class="chips"><li>常態分布</li><li>每根價格互相獨立</li><li>價格會回到均值</li><li>波動穩定</li></ul>
+      </a>
+      
+    </div>
+  </section>
+  
+  <section class="cat" id="cat-4">
+    <h2>關聯與迴歸</h2>
+    <div class="cards">
+      
+      <a class="card" href="methods/pearson-correlation.html">
+        <div class="card-top">
+          <span class="severity sev-3" title="踩雷指數 3 / 3">
+            <span class="sr-only">踩雷指數 3 / 3：</span><i class="on"></i><i class="on"></i><i class="on"></i>
+            <span class="severity-text">結論可能相反</span>
+          </span>
+        </div>
+        <h3>皮爾森相關係數</h3>
+        <p class="card-en">Pearson Correlation</p>
+        <p class="card-summary">一個離群點就能憑空製造出 0.6 的相關；而一條完美的 U 形曲線，相關係數卻可能接近 0。</p>
+        <ul class="chips"><li>線性關係</li><li>沒有離群點</li><li>兩個序列皆平穩</li></ul>
+      </a>
+      
+    </div>
+  </section>
+  
+
+  <section class="how">
+    <h2>每一頁都長得一樣</h2>
+    <ol class="how-steps">
+      <li>它在做什麼</li><li>它默默假設了什麼</li><li>哪裡會壞掉</li><li>親手試試看</li><li>比較穩健的做法</li><li>一句話帶走</li>
+    </ol>
+    <p>固定的六個段落讓你可以快速比較不同方法，也讓這個網站可以持續擴充：新的方法頁只要照同一套規則撰寫，首頁、分類與目錄都會自動更新。</p>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <p>本站內容僅供學習統計方法之用，所有圖表皆為固定種子的模擬資料，不構成任何投資建議。</p>
+  <p>© 2026 統計方法踩雷圖鑑。新增內容的規則請見專案中的 AGENTS.md。</p>
+</footer>
+<script src="assets/lab.js"></script>
+<script src="assets/hero.js"></script>
+</body>
+</html>

@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block title %}{{ page.meta.title }}｜{{ site_title }}{% endblock %}
+{% block description %}{{ page.meta.summary }}{% endblock %}
+{% block body %}
+<div class="layout">
+  <main class="article">
+    <header class="specimen">
+      <p class="specimen-cat"><a href="{{ root }}index.html">圖鑑</a> / {{ page.meta.category }}</p>
+      <h1>{{ page.meta.title }}</h1>
+      <p class="specimen-en">{{ page.meta.title_en }}</p>
+      <p class="specimen-summary">{{ page.meta.summary }}</p>
+      <dl class="specimen-facts">
+        <div>
+          <dt>踩雷指數</dt>
+          <dd><span class="severity sev-{{ page.meta.severity }}">{% for i in range(3) %}<i class="{{ 'on' if i < page.meta.severity else '' }}"></i>{% endfor %}<span class="severity-text">{{ severity_label[page.meta.severity] }}</span></span></dd>
+        </div>
+        <div>
+          <dt>它假設了</dt>
+          <dd><ul class="chips">{% for a in page.meta.assumptions %}<li>{{ a }}</li>{% endfor %}</ul></dd>
+        </div>
+        <div>
+          <dt>最後更新</dt>
+          <dd>{{ page.meta.updated }}</dd>
+        </div>
+      </dl>
+    </header>
+
+    <article class="prose">
+      {{ page.html | safe }}
+    </article>
+
+    {% if related %}
+    <section class="related">
+      <h2>相關方法</h2>
+      <ul>{% for r in related %}<li><a href="{{ r.slug }}.html">{{ r.meta.title }}</a>：{{ r.meta.summary }}</li>{% endfor %}</ul>
+    </section>
+    {% endif %}
+
+    <nav class="pager" aria-label="上一篇與下一篇">
+      {% if prev %}<a class="pager-prev" href="{{ prev.slug }}.html"><span>上一篇</span>{{ prev.meta.title }}</a>{% else %}<span></span>{% endif %}
+      {% if next %}<a class="pager-next" href="{{ next.slug }}.html"><span>下一篇</span>{{ next.meta.title }}</a>{% endif %}
+    </nav>
+  </main>
+
+  <aside class="sidebar">
+    <nav aria-label="本頁段落">
+      <h2>本頁段落</h2>
+      <ol>{% for s in sections %}<li><a href="#s{{ loop.index }}">{{ s }}</a></li>{% endfor %}</ol>
+    </nav>
+    <nav aria-label="所有方法">
+      <h2>所有方法</h2>
+      {% for cat, ps in groups %}
+      <h3>{{ cat }}</h3>
+      <ul>{% for p in ps %}<li><a href="{{ p.slug }}.html"{% if p.slug == current %} aria-current="page"{% endif %}>{{ p.meta.title }}</a></li>{% endfor %}</ul>
+      {% endfor %}
+    </nav>
+  </aside>
+</div>
+{% endblock %}
+{% block scripts %}<script src="{{ root }}demos/{{ page.slug }}.js"></script>{% endblock %}
