@@ -3,126 +3,169 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>統計方法踩雷圖鑑</title>
-<meta name="description" content="指標沒有錯，錯的是我們沒問它假設了什麼。">
+<title>時間序列白話 Wiki</title>
+<meta name="description" content="從零看懂時間序列模型，再把它接到量化交易上。">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@700;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/style.css">
 </head>
 <body>
-<div class="hazard-strip" aria-hidden="true"></div>
 <header class="site-header">
-  <a class="site-name" href="index.html">統計方法踩雷圖鑑</a>
-  <nav aria-label="分類">
-    <a href="index.html#cat-1">離群值偵測</a><a href="index.html#cat-2">平滑與趨勢</a><a href="index.html#cat-3">波動與通道</a><a href="index.html#cat-4">關聯與迴歸</a>
+  <a class="site-name" href="index.html">時間序列白話 Wiki</a>
+  <nav aria-label="主要導覽">
+    <a href="index.html#path">學習路線</a>
+    <a href="index.html#wanted">待寫清單</a>
+    <a href="log.html">更新紀錄</a>
   </nav>
 </header>
 
 <main class="home">
   <section class="hero">
     <div class="hero-text">
-      <h1>你用的指標，<br>悄悄假設了什麼？</h1>
-      <p class="hero-lead">z-score、移動平均、布林通道、相關係數，每一個都帶著對資料的假設。市場資料常常不符合這些假設，而指標不會提醒你。這本圖鑑一頁拆解一個方法：它假設了什麼、哪裡會壞掉、可以改用什麼。</p>
-      <p class="hero-hint">先玩右邊這個：把最大那根跳動往上拉，看第二大的事件怎麼從偵測中消失。</p>
+      <h1>今天的數字，<br>記得昨天多少？</h1>
+      <p class="hero-lead">時間序列分析問的其實就是這件事。氣溫、體重、股價，都是一個接一個按時間排好的數字。這個 Wiki 用白話把每個觀念和模型講一遍，再說明它在量化交易裡拿來做什麼。</p>
+      <p class="hero-hint">先拖右邊的「記憶力」：0 是完全不記得昨天，1 是完全記得。看同一批隨機數字會變成什麼樣子。</p>
     </div>
     <div class="lab lab-hero" data-demo="hero"><noscript>這個互動實驗需要開啟 JavaScript。</noscript></div>
   </section>
 
-  
-  <section class="cat" id="cat-1">
-    <h2>離群值偵測</h2>
-    <div class="cards">
+  <section class="path" id="path">
+    <h2>學習路線</h2>
+    <p class="section-note">照這個順序讀，每一頁需要的觀念前面都已經出現過。順序由各頁的先備關係自動排出。</p>
+    <ol class="path-list">
       
-      <a class="card" href="methods/z-score.html">
-        <div class="card-top">
-          <span class="severity sev-3" title="踩雷指數 3 / 3">
-            <span class="sr-only">踩雷指數 3 / 3：</span><i class="on"></i><i class="on"></i><i class="on"></i>
-            <span class="severity-text">結論可能相反</span>
+      <li>
+        <a class="path-item" href="wiki/time-series.html">
+          <span class="path-main">
+            <span class="path-title">時間序列是什麼</span>
+            <span class="path-summary">按照時間先後排好的一串數字。順序本身就是資訊，打亂就失去意義。</span>
           </span>
-        </div>
-        <h3>z-score 離群偵測</h3>
-        <p class="card-en">Z-score Outlier Detection</p>
-        <p class="card-summary">你想抓的離群值會先把標準差撐大，然後躲在被撐大的標準差後面，讓自己看起來很正常。</p>
-        <ul class="chips"><li>常態分布</li><li>尺度估計沒被污染</li><li>平穩性</li></ul>
-      </a>
-      
-    </div>
-  </section>
-  
-  <section class="cat" id="cat-2">
-    <h2>平滑與趨勢</h2>
-    <div class="cards">
-      
-      <a class="card" href="methods/moving-average.html">
-        <div class="card-top">
-          <span class="severity sev-2" title="踩雷指數 2 / 3">
-            <span class="sr-only">踩雷指數 2 / 3：</span><i class="on"></i><i class="on"></i><i class=""></i>
-            <span class="severity-text">訊號經常失真</span>
+          <span class="path-meta">
+            <span class="tag tag-0">概念</span>
+            <span class="level" title="難度：入門"><i class="on"></i><i class=""></i><i class=""></i><span>入門</span></span>
+            
           </span>
-        </div>
-        <h3>移動平均</h3>
-        <p class="card-en">Simple Moving Average</p>
-        <p class="card-summary">均線永遠落後價格大約半個視窗；想讓它反應快一點，盤整時的假訊號就會跟著變多。</p>
-        <ul class="chips"><li>區間內水準不變</li><li>雜訊互相抵消</li><li>沒有極端值</li></ul>
-      </a>
+        </a>
+      </li>
       
-    </div>
-  </section>
-  
-  <section class="cat" id="cat-3">
-    <h2>波動與通道</h2>
-    <div class="cards">
-      
-      <a class="card" href="methods/bollinger-bands.html">
-        <div class="card-top">
-          <span class="severity sev-3" title="踩雷指數 3 / 3">
-            <span class="sr-only">踩雷指數 3 / 3：</span><i class="on"></i><i class="on"></i><i class="on"></i>
-            <span class="severity-text">結論可能相反</span>
+      <li>
+        <a class="path-item" href="wiki/white-noise.html">
+          <span class="path-main">
+            <span class="path-title">白噪音</span>
+            <span class="path-summary">完全沒有規律、每一個數字都和前面無關的序列。它是所有模型用來對照的基準。</span>
           </span>
-        </div>
-        <h3>布林通道</h3>
-        <p class="card-en">Bollinger Bands</p>
-        <p class="card-summary">「價格有 95% 的時間在通道內」和「碰到上軌就會回檔」，這兩句常見的說法在趨勢行情中都不成立。</p>
-        <ul class="chips"><li>常態分布</li><li>每根價格互相獨立</li><li>價格會回到均值</li><li>波動穩定</li></ul>
-      </a>
-      
-    </div>
-  </section>
-  
-  <section class="cat" id="cat-4">
-    <h2>關聯與迴歸</h2>
-    <div class="cards">
-      
-      <a class="card" href="methods/pearson-correlation.html">
-        <div class="card-top">
-          <span class="severity sev-3" title="踩雷指數 3 / 3">
-            <span class="sr-only">踩雷指數 3 / 3：</span><i class="on"></i><i class="on"></i><i class="on"></i>
-            <span class="severity-text">結論可能相反</span>
+          <span class="path-meta">
+            <span class="tag tag-0">概念</span>
+            <span class="level" title="難度：入門"><i class="on"></i><i class=""></i><i class=""></i><span>入門</span></span>
+            
           </span>
-        </div>
-        <h3>皮爾森相關係數</h3>
-        <p class="card-en">Pearson Correlation</p>
-        <p class="card-summary">一個離群點就能憑空製造出 0.6 的相關；而一條完美的 U 形曲線，相關係數卻可能接近 0。</p>
-        <ul class="chips"><li>線性關係</li><li>沒有離群點</li><li>兩個序列皆平穩</li></ul>
-      </a>
+        </a>
+      </li>
       
-    </div>
+      <li>
+        <a class="path-item" href="wiki/random-walk.html">
+          <span class="path-main">
+            <span class="path-title">隨機漫步</span>
+            <span class="path-summary">每一步都隨機，但位置是累加的。純粹靠運氣，也能走出看起來像趨勢的路線。</span>
+          </span>
+          <span class="path-meta">
+            <span class="tag tag-0">概念</span>
+            <span class="level" title="難度：入門"><i class="on"></i><i class=""></i><i class=""></i><span>入門</span></span>
+            <span class="has-demo">可以動手玩</span>
+          </span>
+        </a>
+      </li>
+      
+      <li>
+        <a class="path-item" href="wiki/stationarity.html">
+          <span class="path-main">
+            <span class="path-title">平穩性</span>
+            <span class="path-summary">一條序列的「脾氣」不隨時間改變：平均、起伏幅度、和過去的關係都維持一樣。</span>
+          </span>
+          <span class="path-meta">
+            <span class="tag tag-0">概念</span>
+            <span class="level" title="難度：進階"><i class="on"></i><i class="on"></i><i class=""></i><span>進階</span></span>
+            <span class="has-demo">可以動手玩</span>
+          </span>
+        </a>
+      </li>
+      
+      <li>
+        <a class="path-item" href="wiki/autocorrelation.html">
+          <span class="path-main">
+            <span class="path-title">自相關</span>
+            <span class="path-summary">衡量一條序列和「幾天前的自己」有多像。它是判斷資料有沒有記憶的第一個工具。</span>
+          </span>
+          <span class="path-meta">
+            <span class="tag tag-0">工具</span>
+            <span class="level" title="難度：進階"><i class="on"></i><i class="on"></i><i class=""></i><span>進階</span></span>
+            <span class="has-demo">可以動手玩</span>
+          </span>
+        </a>
+      </li>
+      
+      <li>
+        <a class="path-item" href="wiki/ar-model.html">
+          <span class="path-main">
+            <span class="path-title">AR 模型</span>
+            <span class="path-summary">用「昨天的數值」預測今天的模型。一個參數決定記憶多強、被推開後多快回來。</span>
+          </span>
+          <span class="path-meta">
+            <span class="tag tag-0">模型</span>
+            <span class="level" title="難度：進階"><i class="on"></i><i class="on"></i><i class=""></i><span>進階</span></span>
+            <span class="has-demo">可以動手玩</span>
+          </span>
+        </a>
+      </li>
+      
+    </ol>
   </section>
-  
+
+  <section class="wanted-box" id="wanted">
+    <h2>待寫清單</h2>
+    <p class="section-note">這些詞已經在頁面中被提到，但還沒有自己的頁面。被越多頁提到的排越前面。</p>
+    
+    <ul class="wanted-list">
+      
+      <li><span class="wl wanted">報酬率</span><span class="wanted-from">被 <a href="wiki/stationarity.html">平穩性</a>、<a href="wiki/time-series.html">時間序列是什麼</a>、<a href="wiki/white-noise.html">白噪音</a> 提到</span></li>
+      
+      <li><span class="wl wanted">ADF 檢定</span><span class="wanted-from">被 <a href="wiki/ar-model.html">AR 模型</a>、<a href="wiki/stationarity.html">平穩性</a> 提到</span></li>
+      
+      <li><span class="wl wanted">差分</span><span class="wanted-from">被 <a href="wiki/random-walk.html">隨機漫步</a>、<a href="wiki/stationarity.html">平穩性</a> 提到</span></li>
+      
+      <li><span class="wl wanted">GARCH 模型</span><span class="wanted-from">被 <a href="wiki/ar-model.html">AR 模型</a>、<a href="wiki/stationarity.html">平穩性</a> 提到</span></li>
+      
+      <li><span class="wl wanted">均值回歸</span><span class="wanted-from">被 <a href="wiki/ar-model.html">AR 模型</a>、<a href="wiki/stationarity.html">平穩性</a> 提到</span></li>
+      
+      <li><span class="wl wanted">波動叢聚</span><span class="wanted-from">被 <a href="wiki/autocorrelation.html">自相關</a>、<a href="wiki/white-noise.html">白噪音</a> 提到</span></li>
+      
+      <li><span class="wl wanted">ARIMA</span><span class="wanted-from">被 <a href="wiki/ar-model.html">AR 模型</a> 提到</span></li>
+      
+      <li><span class="wl wanted">共整合</span><span class="wanted-from">被 <a href="wiki/stationarity.html">平穩性</a> 提到</span></li>
+      
+      <li><span class="wl wanted">Ljung–Box 檢定</span><span class="wanted-from">被 <a href="wiki/white-noise.html">白噪音</a> 提到</span></li>
+      
+      <li><span class="wl wanted">MA 模型</span><span class="wanted-from">被 <a href="wiki/ar-model.html">AR 模型</a> 提到</span></li>
+      
+      <li><span class="wl wanted">偏自相關</span><span class="wanted-from">被 <a href="wiki/autocorrelation.html">自相關</a> 提到</span></li>
+      
+    </ul>
+    
+  </section>
 
   <section class="how">
-    <h2>每一頁都長得一樣</h2>
+    <h2>每一頁都照同一個順序講</h2>
     <ol class="how-steps">
-      <li>它在做什麼</li><li>它默默假設了什麼</li><li>哪裡會壞掉</li><li>親手試試看</li><li>比較穩健的做法</li><li>一句話帶走</li>
+      <li>一句話</li><li>生活中的比喻</li><li>它到底在說什麼</li><li>親手試試看</li><li>量化交易怎麼用</li><li>常見誤解</li>
     </ol>
-    <p>固定的六個段落讓你可以快速比較不同方法，也讓這個網站可以持續擴充：新的方法頁只要照同一套規則撰寫，首頁、分類與目錄都會自動更新。</p>
+    <p>先講人話，再講內容，最後才接到量化交易。新的知識點丟進來時，AI 會依照專案裡的 AGENTS.md 整理成同樣的結構，並自動接上頁面之間的連結。</p>
   </section>
 </main>
 
 <footer class="site-footer">
-  <p>本站內容僅供學習統計方法之用，所有圖表皆為固定種子的模擬資料，不構成任何投資建議。</p>
-  <p>© 2026 統計方法踩雷圖鑑。新增內容的規則請見專案中的 AGENTS.md。</p>
+  <p>本站僅供學習時間序列分析之用，所有圖表皆為固定種子的模擬資料，不構成任何投資建議。</p>
+  <p>© 2026 時間序列白話 Wiki。頁面由 AI 依專案中的 AGENTS.md 規則整理。</p>
 </footer>
 <script src="assets/lab.js"></script>
 <script src="assets/hero.js"></script>

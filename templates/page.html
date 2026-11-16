@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}{{ page.meta.title }}｜{{ site_title }}{% endblock %}
+{% block description %}{{ page.meta.summary }}{% endblock %}
+{% block body %}
+<div class="layout">
+  <main class="article">
+    <header class="specimen">
+      <p class="specimen-cat"><a href="{{ root }}index.html#path">學習路線</a> 第 {{ step }} 站，共 {{ path|length }} 站</p>
+      <h1>{{ page.meta.title }}</h1>
+      <p class="specimen-en">{{ page.meta.title_en }}</p>
+      <dl class="specimen-facts">
+        <div><dt>類型</dt><dd>{{ page.meta.type }}</dd></div>
+        <div><dt>難度</dt><dd><span class="level">{% for i in range(3) %}<i class="{{ 'on' if i < page.meta.level else '' }}"></i>{% endfor %}<span>{{ levels[page.meta.level] }}</span></span></dd></div>
+        <div><dt>建議先讀</dt><dd>{% if prereqs %}{% for q in prereqs %}<a href="{{ q.slug }}.html">{{ q.meta.title }}</a>{% if not loop.last %}、{% endif %}{% endfor %}{% else %}不需要，可以直接讀{% endif %}</dd></div>
+        <div><dt>最後更新</dt><dd>{{ page.meta.updated }}</dd></div>
+      </dl>
+    </header>
+
+    <article class="prose">
+      {{ page.html | safe }}
+    </article>
+
+    <section class="sources">
+      <h2>這一頁的內容來源</h2>
+      <ul>{% for s in page.meta.sources %}<li>{{ s }}</li>{% endfor %}</ul>
+    </section>
+
+    <nav class="pager" aria-label="上一站與下一站">
+      {% if prev %}<a class="pager-prev" href="{{ prev.slug }}.html"><span>上一站</span>{{ prev.meta.title }}</a>{% else %}<span></span>{% endif %}
+      {% if next %}<a class="pager-next" href="{{ next.slug }}.html"><span>下一站</span>{{ next.meta.title }}</a>{% endif %}
+    </nav>
+  </main>
+
+  <aside class="sidebar">
+    <nav aria-label="本頁段落">
+      <h2>本頁段落</h2>
+      <ol>{% for s in page.sections %}<li><a href="#s{{ loop.index }}">{{ s }}</a></li>{% endfor %}</ol>
+    </nav>
+    <nav aria-label="誰提到這一頁">
+      <h2>誰提到這一頁</h2>
+      {% if page.backlinks %}<ul>{% for b in page.backlinks %}<li><a href="{{ b.slug }}.html">{{ b.meta.title }}</a></li>{% endfor %}</ul>
+      {% else %}<p class="sidebar-empty">還沒有其他頁面連到這裡。</p>{% endif %}
+    </nav>
+    <nav aria-label="所有頁面">
+      <h2>所有頁面</h2>
+      {% for t, ps in groups %}
+      <h3>{{ t }}</h3>
+      <ul>{% for p in ps %}<li><a href="{{ p.slug }}.html"{% if p.slug == current %} aria-current="page"{% endif %}>{{ p.meta.title }}</a></li>{% endfor %}</ul>
+      {% endfor %}
+    </nav>
+  </aside>
+</div>
+{% endblock %}
+{% block scripts %}{% if page.has_demo %}<script src="{{ root }}demos/{{ page.slug }}.js"></script>{% endif %}{% endblock %}

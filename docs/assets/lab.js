@@ -1,6 +1,6 @@
-/* lab.js — 互動實驗共用函式庫（統計方法踩雷圖鑑）
+/* lab.js — 互動實驗共用函式庫（時間序列白話 Wiki）
  *
- * 新增函式時請同步更新這段註解（見 AGENTS.md 第 8 節）。
+ * 新增函式時請同步更新這段註解（見 AGENTS.md 第 10 節）。
  *
  * 註冊
  *   Lab.register(slug, function (lab) { ... })
@@ -15,6 +15,7 @@
  *   Lab.mean(a) Lab.std(a) Lab.median(a) Lab.mad(a) Lab.quantile(a, q)
  *   Lab.rollingMean(a, n) Lab.rollingStd(a, n) Lab.rollingMedian(a, n)   前 n−1 個為 null
  *   Lab.rolling(a, n, fn)    任意滾動統計，fn 接收長度 n 的視窗陣列
+ *   Lab.acf(a, maxLag)       自相關係數陣列，索引 0 對應 lag 0（恆為 1）
  *   Lab.pearson(x, y) Lab.spearman(x, y) Lab.cumsum(a)
  *   Lab.normalCdf(z)         標準常態累積機率
  *   Lab.fmt(v, digits)       數字格式化
@@ -25,11 +26,12 @@
  *   lab.onChange(fn)         立刻執行一次，之後每次控制項變動時執行
  *
  * 輸出
- *   lab.stats([{ label, value, tone, note }])     tone: 'data' | 'classic' | 'robust' | undefined
+ *   lab.stats([{ label, value, tone, note }])     tone: 'data' | 'model' | 'alt' | undefined
  *   lab.caption(text)
  *   lab.chart({ slot, title, height, xLabel, yLabel, yMin, yMax, series: [...] })
- *     series 類型（role: 'data' | 'classic' | 'robust' | 'muted'）
+ *     series 類型（role: 'data' | 'model' | 'alt' | 'muted'）
  *       { type: 'line', role, y: [...], label, dashed }            x 為索引
+ *       { type: 'bars', role, y: [...], label }                    x 為索引的直條（例如自相關圖）
  *       { type: 'band', role, lo: [...], hi: [...], label }        x 為索引
  *       { type: 'dots', role, points: [[x, y], ...], label, hollow, r }
  *       { type: 'hline', role, y, label }
@@ -40,7 +42,7 @@
   'use strict';
   var registry = {};
   var NS = 'http://www.w3.org/2000/svg';
-  var ROLE = { data: 'var(--viz-data)', classic: 'var(--viz-classic)', robust: 'var(--viz-robust)', muted: 'var(--viz-muted)' };
+  var ROLE = { data: 'var(--viz-data)', model: 'var(--viz-model)', alt: 'var(--viz-alt)', muted: 'var(--viz-muted)' };
 
   function el(tag, attrs, parent, text) {
     var svgTags = { svg: 1, path: 1, line: 1, circle: 1, rect: 1, text: 1, g: 1 };
@@ -121,6 +123,16 @@
     var p = d * t * (0.3193815 + t * (-0.3565638 + t * (1.781478 + t * (-1.821256 + t * 1.330274))));
     return z > 0 ? 1 - p : p;
   }
+  function acf(a, maxLag) {
+    var m = mean(a), den = 0, out = [];
+    for (var i = 0; i < a.length; i++) den += (a[i] - m) * (a[i] - m);
+    for (var k = 0; k <= maxLag; k++) {
+      var num = 0;
+      for (var j = k; j < a.length; j++) num += (a[j] - m) * (a[j - k] - m);
+      out.push(num / den);
+    }
+    return out;
+  }
   function cumsum(a) { var s = 0; return a.map(function (v) { s += v; return s; }); }
   function fmt(v, d) {
     if (v == null || isNaN(v)) return '—';
@@ -158,6 +170,7 @@
 
     var xs = [], ys = [];
     cfg.series.forEach(function (s) {
+      if (s.type === 'bars') { s.y.forEach(function (v, i) { xs.push(i); ys.push(v); }); ys.push(0); xs.push(-0.6, s.y.length - 0.4); }
       if (s.type === 'line') s.y.forEach(function (v, i) { if (v != null) { xs.push(i); ys.push(v); } });
       if (s.type === 'band') s.lo.forEach(function (v, i) { if (v != null) { xs.push(i); ys.push(v, s.hi[i]); } });
       if (s.type === 'dots' || s.type === 'path') s.points.forEach(function (p) { xs.push(p[0]); ys.push(p[1]); });
@@ -193,7 +206,7 @@
       });
       return d;
     }
-    var order = { band: 0, hline: 1, line: 2, dots: 3, path: 4 };
+    var order = { band: 0, bars: 0, hline: 1, line: 2, dots: 3, path: 4 };
     cfg.series.slice().sort(function (a, b) { return order[a.type] - order[b.type]; }).forEach(function (s) {
       var c = ROLE[s.role] || ROLE.muted;
       if (s.type === 'band') {
@@ -203,6 +216,12 @@
         el('path', { d: up + dn + 'Z', class: 'band' }, svg).style.fill = c;
         el('path', { d: linePath(s.hi), class: 'band-edge' }, svg).style.stroke = c;
         el('path', { d: linePath(s.lo), class: 'band-edge' }, svg).style.stroke = c;
+      } else if (s.type === 'bars') {
+        var bw = Math.max(2, Math.min(18, (X(1) - X(0)) * 0.6));
+        s.y.forEach(function (v, i) {
+          var top = Math.min(Y(v), Y(0)), hgt = Math.max(1, Math.abs(Y(v) - Y(0)));
+          el('rect', { x: X(i) - bw / 2, y: top, width: bw, height: hgt, rx: Math.min(2, bw / 2), class: 'bar' }, svg).style.fill = c;
+        });
       } else if (s.type === 'hline') {
         el('line', { x1: m.l, x2: W - m.r, y1: Y(s.y), y2: Y(s.y), class: 'hline' }, svg).style.stroke = c;
       } else if (s.type === 'line') {
@@ -221,7 +240,7 @@
     // ---------- 滑鼠懸停 ----------
     var tip = el('div', { class: 'lab-tip', hidden: '' }, wrap);
     var cross = el('line', { y1: m.t, y2: H - m.b, class: 'cross', visibility: 'hidden' }, svg);
-    var hasLine = cfg.series.some(function (s) { return s.type === 'line'; });
+    var hasLine = cfg.series.some(function (s) { return s.type === 'line' || s.type === 'bars'; });
     var allDots = [];
     cfg.series.forEach(function (s) { if (s.type === 'dots' && s.label) s.points.forEach(function (p) { allDots.push({ p: p, s: s }); }); });
     function row(s, text) {
@@ -240,7 +259,7 @@
         i = Math.max(Math.ceil(x0), Math.min(Math.floor(x1), i));
         el('div', { class: 'tip-head' }, tip, (cfg.xLabel || 'x') + ' ' + i);
         cfg.series.forEach(function (s) {
-          if (s.type === 'line' && s.label && s.y[i] != null) row(s, fmt(s.y[i], cfg.digits));
+          if ((s.type === 'line' || s.type === 'bars') && s.label && s.y[i] != null) row(s, fmt(s.y[i], cfg.digits));
           if (s.type === 'band' && s.label && s.lo[i] != null) row(s, fmt(s.lo[i], cfg.digits) + ' ~ ' + fmt(s.hi[i], cfg.digits));
           if (s.type === 'dots' && s.label && s.points.some(function (p) { return p[0] === i; })) row(s, '✓');
         });
@@ -330,6 +349,6 @@
     register: function (slug, fn) { registry[slug] = fn; },
     random: random, mean: mean, std: std, median: median, mad: mad, quantile: quantile,
     rollingMean: rollingMean, rollingStd: rollingStd, rollingMedian: rollingMedian,
-    rolling: rolling, pearson: pearson, spearman: spearman, cumsum: cumsum, normalCdf: normalCdf, fmt: fmt
+    rolling: rolling, acf: acf, pearson: pearson, spearman: spearman, cumsum: cumsum, normalCdf: normalCdf, fmt: fmt
   };
 })();

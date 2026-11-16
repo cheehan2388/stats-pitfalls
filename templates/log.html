@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}更新紀錄｜{{ site_title }}{% endblock %}
+{% block body %}
+<main class="home">
+  <section class="log">
+    <h1>更新紀錄</h1>
+    <p class="section-note">每次收錄或修訂知識點，AI 都要在這裡留下一筆：動了哪些頁面、內容從哪裡來。</p>
+    <div class="prose log-body">{{ log_html | safe }}</div>
+  </section>
+</main>
+{% endblock %}

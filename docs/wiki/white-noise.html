@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>白噪音｜時間序列白話 Wiki</title>
+<meta name="description" content="完全沒有規律、每一個數字都和前面無關的序列。它是所有模型用來對照的基準。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@700;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header class="site-header">
+  <a class="site-name" href="../index.html">時間序列白話 Wiki</a>
+  <nav aria-label="主要導覽">
+    <a href="../index.html#path">學習路線</a>
+    <a href="../index.html#wanted">待寫清單</a>
+    <a href="../log.html">更新紀錄</a>
+  </nav>
+</header>
+
+<div class="layout">
+  <main class="article">
+    <header class="specimen">
+      <p class="specimen-cat"><a href="../index.html#path">學習路線</a> 第 2 站，共 6 站</p>
+      <h1>白噪音</h1>
+      <p class="specimen-en">White Noise</p>
+      <dl class="specimen-facts">
+        <div><dt>類型</dt><dd>概念</dd></div>
+        <div><dt>難度</dt><dd><span class="level"><i class="on"></i><i class=""></i><i class=""></i><span>入門</span></span></dd></div>
+        <div><dt>建議先讀</dt><dd><a href="time-series.html">時間序列是什麼</a></dd></div>
+        <div><dt>最後更新</dt><dd>2026-11-16</dd></div>
+      </dl>
+    </header>
+
+    <article class="prose">
+      <h2 id="s1">一句話</h2>
+<p>白噪音是一串彼此毫無關係的隨機數字，知道前面所有的數字，也猜不出下一個。</p>
+<h2 id="s2">生活中的比喻</h2>
+<p>每天丟一次骰子，把點數記下來。昨天丟出 6，對今天會丟出幾點沒有任何幫助。連續丟出三次 6，第四次的機率還是一樣。</p>
+<p>不管你記錄多久、分析多仔細，對下一次最好的猜測永遠是同一個答案：平均值 3.5。</p>
+<p>對應到資料上：白噪音就是「過去對未來完全沒有幫助」的序列。</p>
+<h2 id="s3">它到底在說什麼</h2>
+<p>白噪音（white noise）是最單純的一種 <a class="wl" href="time-series.html">時間序列</a>，要符合三個條件：</p>
+<ul>
+<li><strong>平均固定</strong>：長期平均不會變，通常設定為 0。</li>
+<li><strong>起伏的幅度固定</strong>：不會一段時間特別劇烈、一段時間特別平靜。</li>
+<li><strong>彼此不相關</strong>：任何兩個不同時間點的數字之間，沒有線性關係。</li>
+</ul>
+<p>第三個條件最重要。用 <a class="wl" href="autocorrelation.html">自相關</a> 的話來說，就是不管隔幾天，自相關都是 0。</p>
+<p>白噪音本身沒有什麼好預測的，它的價值在於當作基準。時間序列模型把資料拆成「模型解釋得了的部分」和「剩下的部分」，剩下的部分叫做殘差（residual）。如果殘差是白噪音，代表有規律的東西都被模型拿走了。如果殘差還有規律，代表模型漏了東西。</p>
+<div class="admonition note">
+<p class="admonition-title">白噪音不一定是鐘形分布</p>
+<p>定義只要求平均固定、幅度固定、彼此不相關，沒有規定數字要長成什麼分布。丟骰子的結果每個點數機會均等，一樣是白噪音。</p>
+</div>
+<h2 id="s4">量化交易怎麼用</h2>
+<p>兩個最常見的用途。</p>
+<p>第一，<strong>檢查模型有沒有漏東西</strong>。建好 <a class="wl" href="ar-model.html">AR 模型</a> 或其他模型之後，看殘差是不是白噪音。常用的工具是自相關圖和 <span class="wl wanted" title="這一頁還沒寫">Ljung–Box 檢定</span>。</p>
+<p>第二，<strong>當作「沒有優勢」的對照組</strong>。如果某個商品的 <span class="wl wanted" title="這一頁還沒寫">報酬率</span> 和白噪音分不出差別，代表只靠它自己過去的報酬率，用線性的方法預測不了下一期。任何交易想法都應該先問：我的訊號和白噪音比起來，真的有差別嗎？</p>
+<div class="admonition quant">
+<p class="admonition-title">它能告訴你什麼、不能告訴你什麼</p>
+<p><strong>能</strong>：告訴你「過去的數值」和「未來的數值」之間有沒有線性關係可以利用。</p>
+<p><strong>不能</strong>：告訴你完全沒有任何規律。白噪音只排除線性關係，而且只看數值本身。報酬率可能是白噪音，但它的「波動大小」仍然有規律，也就是 <span class="wl wanted" title="這一頁還沒寫">波動叢聚</span>。</p>
+</div>
+<h2 id="s5">常見誤解</h2>
+<div class="admonition myth">
+<p class="admonition-title">白噪音就是沒用的東西</p>
+<p>模型做完之後，你希望看到的殘差正是白噪音。它是「該拿的都拿了」的證明。真正該擔心的是殘差不是白噪音。</p>
+</div>
+<div class="admonition myth">
+<p class="admonition-title">報酬率像白噪音，所以市場完全無法預測</p>
+<p>白噪音只代表「用自己過去的數值做線性預測」沒有用。波動的大小、其他商品的資訊、非線性的關係，都不在這個定義排除的範圍內。</p>
+</div>
+    </article>
+
+    <section class="sources">
+      <h2>這一頁的內容來源</h2>
+      <ul><li>教科書通識</li></ul>
+    </section>
+
+    <nav class="pager" aria-label="上一站與下一站">
+      <a class="pager-prev" href="time-series.html"><span>上一站</span>時間序列是什麼</a>
+      <a class="pager-next" href="random-walk.html"><span>下一站</span>隨機漫步</a>
+    </nav>
+  </main>
+
+  <aside class="sidebar">
+    <nav aria-label="本頁段落">
+      <h2>本頁段落</h2>
+      <ol><li><a href="#s1">一句話</a></li><li><a href="#s2">生活中的比喻</a></li><li><a href="#s3">它到底在說什麼</a></li><li><a href="#s4">量化交易怎麼用</a></li><li><a href="#s5">常見誤解</a></li></ol>
+    </nav>
+    <nav aria-label="誰提到這一頁">
+      <h2>誰提到這一頁</h2>
+      <ul><li><a href="ar-model.html">AR 模型</a></li><li><a href="autocorrelation.html">自相關</a></li><li><a href="random-walk.html">隨機漫步</a></li><li><a href="stationarity.html">平穩性</a></li><li><a href="time-series.html">時間序列是什麼</a></li></ul>
+      
+    </nav>
+    <nav aria-label="所有頁面">
+      <h2>所有頁面</h2>
+      
+      <h3>概念</h3>
+      <ul><li><a href="time-series.html">時間序列是什麼</a></li><li><a href="white-noise.html" aria-current="page">白噪音</a></li><li><a href="random-walk.html">隨機漫步</a></li><li><a href="stationarity.html">平穩性</a></li></ul>
+      
+      <h3>工具</h3>
+      <ul><li><a href="autocorrelation.html">自相關</a></li></ul>
+      
+      <h3>模型</h3>
+      <ul><li><a href="ar-model.html">AR 模型</a></li></ul>
+      
+    </nav>
+  </aside>
+</div>
+
+<footer class="site-footer">
+  <p>本站僅供學習時間序列分析之用，所有圖表皆為固定種子的模擬資料，不構成任何投資建議。</p>
+  <p>© 2026 時間序列白話 Wiki。頁面由 AI 依專案中的 AGENTS.md 規則整理。</p>
+</footer>
+<script src="../assets/lab.js"></script>
+
+</body>
+</html>

@@ -1,5 +1,5 @@
-/* 統計方法踩雷圖鑑 — 全站唯一的樣式表
-   所有顏色、字級、間距都從這裡的變數取用，不要在別處寫死色碼（見 AGENTS.md 第 10 節）。 */
+/* 時間序列白話 Wiki — 全站唯一的樣式表
+   所有顏色、字級、間距都從這裡的變數取用，不要在別處寫死色碼（見 AGENTS.md 第 12 節）。 */
 :root {
   /* 底色與文字 */
   --paper: #e9eef1;
@@ -9,7 +9,7 @@
   --ink-3: #6f7c8a;
   --line: #c8d2d9;
   --line-soft: #dde4e9;
-  /* 語意色：警示＝踩雷，安全＝穩健做法 */
+  /* 語意色：黃＝常見誤解，綠＝量化交易 */
   --hazard: #f2b705;
   --hazard-soft: #fdf3cf;
   --hazard-ink: #4f3b00;
@@ -19,8 +19,8 @@
   --link: #1c5cab;
   /* 圖表角色色（對應 lab.js 的 role） */
   --viz-data: #2a78d6;
-  --viz-classic: #eb6834;
-  --viz-robust: #1baf7a;
+  --viz-model: #eb6834;
+  --viz-alt: #1baf7a;
   --viz-muted: #8b98a5;
   /* 字體 */
   --serif: "Noto Serif TC", "Songti TC", "PMingLiU", serif;
@@ -53,13 +53,8 @@ a:focus-visible, input:focus-visible, select:focus-visible { outline: 3px solid 
 h1, h2, h3 { font-family: var(--serif); line-height: 1.3; margin: 0; }
 .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
 
-/* 警示斜紋：全站唯一的裝飾，只用在頁首與踩雷提示框 */
-.hazard-strip {
-  height: 10px;
-  background: repeating-linear-gradient(-45deg, var(--hazard) 0 14px, var(--ink) 14px 28px);
-}
-
 .site-header {
+  border-bottom: 2px solid var(--ink);
   display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--s1) var(--s3);
   max-width: 78rem; margin: 0 auto; padding: var(--s2) var(--s3);
 }
@@ -135,11 +130,11 @@ h1, h2, h3 { font-family: var(--serif); line-height: 1.3; margin: 0; }
 .admonition { margin: 0 0 var(--s3); padding: var(--s2) var(--s3); border-radius: var(--radius); border: 1px solid var(--line); background: var(--surface); }
 .admonition > p:last-child, .admonition > ul:last-child { margin-bottom: 0; }
 .admonition-title { font-family: var(--serif); font-weight: 900; font-size: var(--t-m); margin-bottom: var(--s1) !important; }
-.admonition.pitfall { background: var(--hazard-soft); border-color: var(--hazard); color: var(--hazard-ink); position: relative; padding-left: calc(var(--s3) + 12px); }
-.admonition.pitfall::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 12px; border-radius: var(--radius) 0 0 var(--radius); background: repeating-linear-gradient(-45deg, var(--hazard) 0 8px, var(--ink) 8px 16px); }
-.admonition.pitfall .admonition-title::before { content: "踩雷　"; font-family: var(--sans); font-size: var(--t-xs); font-weight: 700; background: var(--ink); color: var(--hazard); padding: 2px 4px 2px 8px; border-radius: 3px; margin-right: 8px; vertical-align: 2px; }
-.admonition.robust { background: var(--safe-soft); border-color: var(--safe); color: var(--safe-ink); }
-.admonition.robust .admonition-title::before { content: "推薦　"; font-family: var(--sans); font-size: var(--t-xs); font-weight: 700; background: var(--safe); color: #fff; padding: 2px 4px 2px 8px; border-radius: 3px; margin-right: 8px; vertical-align: 2px; }
+.admonition.myth { background: var(--hazard-soft); border-color: var(--hazard); color: var(--hazard-ink); position: relative; padding-left: calc(var(--s3) + 12px); }
+.admonition.myth::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 12px; border-radius: var(--radius) 0 0 var(--radius); background: repeating-linear-gradient(-45deg, var(--hazard) 0 8px, var(--ink) 8px 16px); }
+.admonition.myth .admonition-title::before { content: "誤解　"; font-family: var(--sans); font-size: var(--t-xs); font-weight: 700; background: var(--ink); color: var(--hazard); padding: 2px 4px 2px 8px; border-radius: 3px; margin-right: 8px; vertical-align: 2px; }
+.admonition.quant { background: var(--safe-soft); border-color: var(--safe); color: var(--safe-ink); }
+.admonition.quant .admonition-title::before { content: "量化　"; font-family: var(--sans); font-size: var(--t-xs); font-weight: 700; background: var(--safe); color: #fff; padding: 2px 4px 2px 8px; border-radius: 3px; margin-right: 8px; vertical-align: 2px; }
 .admonition.note { border-left: 4px solid var(--ink-3); }
 .admonition code { background: rgba(20, 32, 46, 0.08); }
 
@@ -194,6 +189,7 @@ h1, h2, h3 { font-family: var(--serif); line-height: 1.3; margin: 0; }
 .lab-plot .axis-label { font-size: 12px; fill: var(--ink-2); font-family: var(--sans); }
 .lab-plot .series-line { fill: none; stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
 .lab-plot .series-line.dashed { stroke-dasharray: 6 4; }
+.lab-plot .bar { opacity: 0.9; }
 .lab-plot .band { opacity: 0.14; }
 .lab-plot .band-edge { fill: none; stroke-width: 1.25; opacity: 0.8; }
 .lab-plot .hline { stroke-width: 1.5; stroke-dasharray: 4 4; }
@@ -222,3 +218,54 @@ h1, h2, h3 { font-family: var(--serif); line-height: 1.3; margin: 0; }
   .specimen h1 { font-size: 2rem; }
   .specimen-summary { font-size: var(--t-m); }
 }
+
+/* ---------- Wiki 專用 ---------- */
+.site-header { margin-bottom: var(--s2); }
+.wl { text-decoration-thickness: 1px; }
+.wl.wanted { color: var(--ink-2); border-bottom: 1.5px dashed var(--ink-3); cursor: help; }
+.wl.wanted::after { content: "待寫"; font-size: 0.68em; margin-left: 4px; padding: 1px 5px; border-radius: 3px; background: var(--line-soft); color: var(--ink-2); vertical-align: 0.15em; }
+.level { display: inline-flex; align-items: center; gap: 3px; font-size: var(--t-xs); color: var(--ink-2); }
+.level i { width: 7px; height: 12px; border: 1.5px solid var(--ink); border-radius: 2px; }
+.level i.on { background: var(--ink); }
+.level span { margin-left: 5px; }
+.tag { font-size: var(--t-xs); padding: 2px 9px; border: 1px solid var(--ink); border-radius: 99px; line-height: 1.5; }
+.has-demo { font-size: var(--t-xs); color: var(--link); }
+.section-note { color: var(--ink-2); font-size: var(--t-s); margin: 0 0 var(--s3); max-width: 44em; }
+.home > section > h2 { font-size: var(--t-xl); font-weight: 900; margin-bottom: var(--s1); }
+.home > section { margin-bottom: var(--s5); }
+.hero { margin-bottom: 0 !important; }
+
+.path-list { list-style: none; counter-reset: step; margin: 0; padding: 0; border-top: 2px solid var(--ink); }
+.path-list li { counter-increment: step; border-bottom: 1px solid var(--line); }
+.path-item { display: grid; grid-template-columns: 3rem minmax(0, 1fr) auto; gap: var(--s2); align-items: center; padding: var(--s2) var(--s1); color: inherit; text-decoration: none; }
+.path-item::before { content: counter(step); font-family: var(--serif); font-weight: 900; font-size: var(--t-xl); color: var(--ink-3); text-align: center; }
+.path-item:hover { background: var(--surface); }
+.path-item:hover .path-title { text-decoration: underline; }
+.path-main { display: flex; flex-direction: column; }
+.path-title { font-family: var(--serif); font-weight: 900; font-size: var(--t-l); }
+.path-summary { color: var(--ink-2); font-size: var(--t-s); line-height: 1.6; }
+.path-meta { display: flex; align-items: center; gap: var(--s2); flex-wrap: wrap; justify-content: flex-end; }
+
+.wanted-list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(19rem, 1fr)); gap: 6px var(--s3); font-size: var(--t-s); }
+.wanted-list li { display: flex; flex-direction: column; padding: 8px 0; border-bottom: 1px solid var(--line-soft); }
+.wanted-list .wl.wanted { align-self: flex-start; font-weight: 700; color: var(--ink); cursor: default; }
+.wanted-from { color: var(--ink-3); font-size: var(--t-xs); }
+
+.specimen h1 { margin-bottom: 0; }
+.specimen-facts { margin-top: var(--s2); }
+.specimen-facts dd a { color: var(--link); }
+.prose h2#s1 { margin-top: var(--s4); }
+.prose h2#s1 + p { font-family: var(--serif); font-weight: 700; font-size: var(--t-xl); line-height: 1.55; }
+.sources { padding: var(--s2) var(--s4) 0; margin-top: var(--s4); border-top: 1px solid var(--line); font-size: var(--t-xs); color: var(--ink-3); }
+.sources h2 { font-family: var(--sans); font-size: var(--t-xs); font-weight: 700; }
+.sources ul { margin: 4px 0 0; padding-left: 1.2em; }
+.sidebar-empty { color: var(--ink-3); font-size: var(--t-xs); margin: 0; }
+.log h1 { font-size: var(--t-2xl); font-weight: 900; margin: var(--s3) 0 var(--s1); }
+.log-body { padding: 0; }
+.log-body h2 { font-size: var(--t-l); margin-top: var(--s3); border-top: 1px solid var(--line); }
+@media (max-width: 720px) {
+  .path-item { grid-template-columns: 2rem minmax(0, 1fr); }
+  .path-meta { grid-column: 2; justify-content: flex-start; }
+  .sources { padding-left: var(--s2); padding-right: var(--s2); }
+}
+.sw-bars { width: 9px; height: 11px; border-radius: 2px; background: var(--c); }

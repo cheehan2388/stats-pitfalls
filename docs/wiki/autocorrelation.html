@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>自相關｜時間序列白話 Wiki</title>
+<meta name="description" content="衡量一條序列和「幾天前的自己」有多像。它是判斷資料有沒有記憶的第一個工具。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@700;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header class="site-header">
+  <a class="site-name" href="../index.html">時間序列白話 Wiki</a>
+  <nav aria-label="主要導覽">
+    <a href="../index.html#path">學習路線</a>
+    <a href="../index.html#wanted">待寫清單</a>
+    <a href="../log.html">更新紀錄</a>
+  </nav>
+</header>
+
+<div class="layout">
+  <main class="article">
+    <header class="specimen">
+      <p class="specimen-cat"><a href="../index.html#path">學習路線</a> 第 5 站，共 6 站</p>
+      <h1>自相關</h1>
+      <p class="specimen-en">Autocorrelation</p>
+      <dl class="specimen-facts">
+        <div><dt>類型</dt><dd>工具</dd></div>
+        <div><dt>難度</dt><dd><span class="level"><i class="on"></i><i class="on"></i><i class=""></i><span>進階</span></span></dd></div>
+        <div><dt>建議先讀</dt><dd><a href="stationarity.html">平穩性</a></dd></div>
+        <div><dt>最後更新</dt><dd>2026-11-16</dd></div>
+      </dl>
+    </header>
+
+    <article class="prose">
+      <h2 id="s1">一句話</h2>
+<p>自相關衡量的是今天的數值和幾天前的數值有多像，用來判斷一條序列記不記得自己的過去。</p>
+<h2 id="s2">生活中的比喻</h2>
+<p>今天很熱，明天多半也熱。氣溫和「一天前的自己」很像。</p>
+<p>和一週前比呢？還有一點像，但沒那麼準了。和三個月前比，就幾乎沒有關係，甚至相反（夏天對冬天）。</p>
+<p>把「隔 1 天有多像、隔 2 天有多像、隔 3 天有多像……」一個一個算出來排成一排，就能看出氣溫的記憶有多長。</p>
+<p>對應到資料上：這一排數字就是自相關函數，畫成圖就是自相關圖。</p>
+<h2 id="s3">它到底在說什麼</h2>
+<p>一般的相關係數衡量兩個不同變數一起變動的程度。自相關（autocorrelation）把其中一個變數換成「自己往後挪 k 天」。</p>
+<pre><code class="language-formula">ρₖ = 「今天的數值」與「k 天前的數值」的相關係數
+</code></pre>
+<ul>
+<li><strong>k</strong>：相隔的天數，稱為落後期數（lag）。</li>
+<li><strong>ρₖ</strong>：介於 −1 到 +1。接近 +1 表示很像，接近 0 表示沒有關係，負值表示方向相反。</li>
+</ul>
+<p>把 k = 1, 2, 3… 的結果畫成一排直條，就是自相關圖，英文縮寫是 ACF。讀圖的方式：</p>
+<ul>
+<li><strong>直條全部貼近 0</strong>：沒有記憶，是 <a class="wl" href="white-noise.html">白噪音</a>。</li>
+<li><strong>直條慢慢變矮</strong>：有記憶，而且逐漸淡去。這是 <a class="wl" href="ar-model.html">AR 模型</a> 的特徵。</li>
+<li><strong>直條一直很高、幾乎不降</strong>：序列可能不符合 <a class="wl" href="stationarity.html">平穩性</a>，要先處理再分析。</li>
+</ul>
+<p>圖上通常有兩條虛線，代表「就算完全沒有記憶，光靠運氣也可能出現的範圍」。直條超出虛線才值得注意。</p>
+<h2 id="s4">親手試試看</h2>
+<p>先看預設狀態下，下方自相關圖的直條怎麼一根比一根矮。接著把「記憶力」拉到 0，再拉到負值。最後把記憶力設回 0，把「資料有幾天」調到最少，看虛線的範圍怎麼變。</p>
+<div class="lab" id="lab" data-demo="autocorrelation"><noscript>這個互動實驗需要開啟 JavaScript。</noscript></div>
+<p>記憶力設為 0.6 時，隔 1 天的自相關是 0.60，隔 5 天只剩 0.07，接近理論值 0.6 的 5 次方（0.08）。每多隔一天，相似程度就再打一次六折。</p>
+<p>資料只有 50 天時，虛線的範圍擴大到 ±0.28。資料越少，越難分辨「真的有記憶」和「只是運氣」。</p>
+<h2 id="s5">量化交易怎麼用</h2>
+<p>三個常見的用途。</p>
+<ul>
+<li><strong>看報酬率有沒有記憶</strong>。隔 1 天的自相關為正，代表漲了之後傾向續漲（動能）；為負代表傾向反轉。實際的數值通常很小。</li>
+<li><strong>檢查模型的殘差</strong>。殘差的自相關圖如果還有直條超出虛線，代表模型沒把規律拿完。</li>
+<li><strong>偵測波動的規律</strong>。對報酬率的平方算自相關，直條通常明顯高於虛線。這表示大波動之後容易接著大波動，也就是 <span class="wl wanted" title="這一頁還沒寫">波動叢聚</span>。</li>
+</ul>
+<p>決定模型該用幾期落後值時，會搭配另一個工具 <span class="wl wanted" title="這一頁還沒寫">偏自相關</span>一起看。</p>
+<pre><code class="language-python">import pandas as pd
+r = pd.Series([0.4, -0.2, 0.1, 0.5, -0.3, 0.2, -0.1, 0.3])
+print(round(r.autocorr(lag=1), 2))          # 報酬率隔 1 期的自相關
+print(round((r ** 2).autocorr(lag=1), 2))   # 報酬率平方：波動有沒有記憶
+</code></pre>
+<div class="admonition quant">
+<p class="admonition-title">它能告訴你什麼、不能告訴你什麼</p>
+<p><strong>能</strong>：告訴你序列有沒有線性的記憶、記憶有多長，以及模型的殘差是否乾淨。</p>
+<p><strong>不能</strong>：告訴你這個記憶大到足以獲利。很小的自相關在統計上可能顯著，但扣掉手續費和滑價（成交價比預期差的部分）之後通常什麼都不剩。</p>
+</div>
+<h2 id="s6">常見誤解</h2>
+<div class="admonition myth">
+<p class="admonition-title">有一根直條超出虛線，就是找到了規律</p>
+<p>虛線是 95% 的範圍。畫 20 根直條，即使資料完全是雜訊，平均也會有 1 根因為運氣而超出。單獨一根超出、而且沒有道理可以解釋的直條，多半是巧合。</p>
+</div>
+<div class="admonition myth">
+<p class="admonition-title">自相關是 0，代表今天和昨天完全無關</p>
+<p>自相關只衡量線性關係。報酬率本身的自相關接近 0，但報酬率平方的自相關通常不是 0。方向無法預測，不代表波動的大小無法預測。</p>
+</div>
+    </article>
+
+    <section class="sources">
+      <h2>這一頁的內容來源</h2>
+      <ul><li>教科書通識</li></ul>
+    </section>
+
+    <nav class="pager" aria-label="上一站與下一站">
+      <a class="pager-prev" href="stationarity.html"><span>上一站</span>平穩性</a>
+      <a class="pager-next" href="ar-model.html"><span>下一站</span>AR 模型</a>
+    </nav>
+  </main>
+
+  <aside class="sidebar">
+    <nav aria-label="本頁段落">
+      <h2>本頁段落</h2>
+      <ol><li><a href="#s1">一句話</a></li><li><a href="#s2">生活中的比喻</a></li><li><a href="#s3">它到底在說什麼</a></li><li><a href="#s4">親手試試看</a></li><li><a href="#s5">量化交易怎麼用</a></li><li><a href="#s6">常見誤解</a></li></ol>
+    </nav>
+    <nav aria-label="誰提到這一頁">
+      <h2>誰提到這一頁</h2>
+      <ul><li><a href="ar-model.html">AR 模型</a></li><li><a href="time-series.html">時間序列是什麼</a></li><li><a href="white-noise.html">白噪音</a></li></ul>
+      
+    </nav>
+    <nav aria-label="所有頁面">
+      <h2>所有頁面</h2>
+      
+      <h3>概念</h3>
+      <ul><li><a href="time-series.html">時間序列是什麼</a></li><li><a href="white-noise.html">白噪音</a></li><li><a href="random-walk.html">隨機漫步</a></li><li><a href="stationarity.html">平穩性</a></li></ul>
+      
+      <h3>工具</h3>
+      <ul><li><a href="autocorrelation.html" aria-current="page">自相關</a></li></ul>
+      
+      <h3>模型</h3>
+      <ul><li><a href="ar-model.html">AR 模型</a></li></ul>
+      
+    </nav>
+  </aside>
+</div>
+
+<footer class="site-footer">
+  <p>本站僅供學習時間序列分析之用，所有圖表皆為固定種子的模擬資料，不構成任何投資建議。</p>
+  <p>© 2026 時間序列白話 Wiki。頁面由 AI 依專案中的 AGENTS.md 規則整理。</p>
+</footer>
+<script src="../assets/lab.js"></script>
+<script src="../demos/autocorrelation.js"></script>
+</body>
+</html>

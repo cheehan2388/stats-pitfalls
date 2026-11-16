@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>平穩性｜時間序列白話 Wiki</title>
+<meta name="description" content="一條序列的「脾氣」不隨時間改變：平均、起伏幅度、和過去的關係都維持一樣。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@700;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header class="site-header">
+  <a class="site-name" href="../index.html">時間序列白話 Wiki</a>
+  <nav aria-label="主要導覽">
+    <a href="../index.html#path">學習路線</a>
+    <a href="../index.html#wanted">待寫清單</a>
+    <a href="../log.html">更新紀錄</a>
+  </nav>
+</header>
+
+<div class="layout">
+  <main class="article">
+    <header class="specimen">
+      <p class="specimen-cat"><a href="../index.html#path">學習路線</a> 第 4 站，共 6 站</p>
+      <h1>平穩性</h1>
+      <p class="specimen-en">Stationarity</p>
+      <dl class="specimen-facts">
+        <div><dt>類型</dt><dd>概念</dd></div>
+        <div><dt>難度</dt><dd><span class="level"><i class="on"></i><i class="on"></i><i class=""></i><span>進階</span></span></dd></div>
+        <div><dt>建議先讀</dt><dd><a href="random-walk.html">隨機漫步</a></dd></div>
+        <div><dt>最後更新</dt><dd>2026-11-16</dd></div>
+      </dl>
+    </header>
+
+    <article class="prose">
+      <h2 id="s1">一句話</h2>
+<p>平穩的序列不管從哪一段時間切下來看，平均和起伏的幅度都差不多。</p>
+<h2 id="s2">生活中的比喻</h2>
+<p>健康成年人的體溫每天量都在 36 到 37 度之間上下。今年量、十年後量，平均差不多，起伏也差不多。你可以放心地說「我的正常體溫是 36.5 度」。</p>
+<p>小孩的身高就不一樣。五歲和十歲的平均身高完全不同，「這個孩子的平均身高」這句話沒有意義，因為它一直在變。</p>
+<p>對應到資料上：體溫是平穩的序列，身高是不平穩的序列。對不平穩的序列算平均，算出來的數字不代表任何東西。</p>
+<h2 id="s3">它到底在說什麼</h2>
+<p>平穩性（stationarity）要求三件事不隨時間改變：</p>
+<ul>
+<li><strong>平均</strong>：沒有長期往上或往下的漂移。</li>
+<li><strong>起伏的幅度</strong>：不會前面平靜、後面劇烈。</li>
+<li><strong>和過去的關係</strong>：今天和昨天有多像，只取決於「相隔幾天」，和日期無關。</li>
+</ul>
+<p>它重要的原因很實際：幾乎所有的統計工具，都是用過去的資料估計一個數字，再拿去用在未來。平均、標準差、相關係數、迴歸，全部如此。只有在序列平穩的時候，「過去算出來的數字」才適用於未來。</p>
+<p><a class="wl" href="white-noise.html">白噪音</a> 是平穩的。<a class="wl" href="random-walk.html">隨機漫步</a> 不是，因為它的位置會越漂越遠，沒有固定的平均。</p>
+<p>不平穩的序列通常可以轉換成平穩的。最常見的做法是 <span class="wl wanted" title="這一頁還沒寫">差分</span>：不看水準，改看每一期的變動。隨機漫步差分之後就是白噪音。這也是為什麼分析價格之前要先換成 <span class="wl wanted" title="這一頁還沒寫">報酬率</span>。</p>
+<h2 id="s4">親手試試看</h2>
+<p>上面的圖是水準（像價格），下面是它每天的變動（像報酬率），兩張圖是同一份資料。橘色橫線是前半段和後半段各自的平均。先比較兩張圖的橘線差多少，再把「後半段的波動放大」往右拉。</p>
+<div class="lab" id="lab" data-demo="stationarity"><noscript>這個互動實驗需要開啟 JavaScript。</noscript></div>
+<p>預設狀態下，水準的平均從 95.4 變成 74.1，差了 21.3。每日變動的平均只差 0.03。同一份資料，一個不平穩，一個平穩。</p>
+<p>把波動放大到 3 倍之後，每日變動的平均仍然接近 0，但標準差從 0.99 變成 3.02。平均沒變，起伏的幅度變了，這樣也不算平穩。</p>
+<h2 id="s5">量化交易怎麼用</h2>
+<p>動手分析之前，先確認手上的序列是不是平穩的。常用的工具是 <span class="wl wanted" title="這一頁還沒寫">ADF 檢定</span>。</p>
+<p>把兩條不平穩的序列直接拿來算相關或做迴歸，很容易得到「高度相關」的結果，即使它們毫無關係。原因只是兩者都在漂移。這種情況叫做假性迴歸（spurious regression），是量化研究中很常見的錯誤。</p>
+<p>平穩性也是 <span class="wl wanted" title="這一頁還沒寫">均值回歸</span>策略的前提。這類策略賭的是「偏離之後會回來」，而只有平穩的序列才有一個固定的水準可以回去。價格本身通常不平穩，所以實務上會去找兩個商品之間平穩的價差，這是 <span class="wl wanted" title="這一頁還沒寫">共整合</span>的主題。</p>
+<div class="admonition quant">
+<p class="admonition-title">它能告訴你什麼、不能告訴你什麼</p>
+<p><strong>能</strong>：告訴你過去估計出來的平均、波動和相關，拿到未來用還站不站得住。</p>
+<p><strong>不能</strong>：保證未來繼續平穩。檢定只能說「這段期間看起來平穩」。市場結構改變時，原本平穩的價差可能從此不再回來。</p>
+</div>
+<h2 id="s6">常見誤解</h2>
+<div class="admonition myth">
+<p class="admonition-title">報酬率的平均很穩定，所以報酬率是平穩的</p>
+<p>平均穩定只是三個條件之一。實驗中把後半段波動放大，平均不變，但起伏的幅度已經不同。真實市場的波動也是一陣一陣的，描述這個現象的是 <span class="wl wanted" title="這一頁還沒寫">GARCH 模型</span>。</p>
+</div>
+<div class="admonition myth">
+<p class="admonition-title">檢定通過了，就可以一直當成平穩</p>
+<p>檢定用的是過去的資料。它無法告訴你下個月會不會發生讓序列永久改變的事件。平穩是需要持續監控的假設，不是一次確認就永遠成立的事實。</p>
+</div>
+    </article>
+
+    <section class="sources">
+      <h2>這一頁的內容來源</h2>
+      <ul><li>教科書通識</li></ul>
+    </section>
+
+    <nav class="pager" aria-label="上一站與下一站">
+      <a class="pager-prev" href="random-walk.html"><span>上一站</span>隨機漫步</a>
+      <a class="pager-next" href="autocorrelation.html"><span>下一站</span>自相關</a>
+    </nav>
+  </main>
+
+  <aside class="sidebar">
+    <nav aria-label="本頁段落">
+      <h2>本頁段落</h2>
+      <ol><li><a href="#s1">一句話</a></li><li><a href="#s2">生活中的比喻</a></li><li><a href="#s3">它到底在說什麼</a></li><li><a href="#s4">親手試試看</a></li><li><a href="#s5">量化交易怎麼用</a></li><li><a href="#s6">常見誤解</a></li></ol>
+    </nav>
+    <nav aria-label="誰提到這一頁">
+      <h2>誰提到這一頁</h2>
+      <ul><li><a href="ar-model.html">AR 模型</a></li><li><a href="autocorrelation.html">自相關</a></li><li><a href="random-walk.html">隨機漫步</a></li><li><a href="time-series.html">時間序列是什麼</a></li></ul>
+      
+    </nav>
+    <nav aria-label="所有頁面">
+      <h2>所有頁面</h2>
+      
+      <h3>概念</h3>
+      <ul><li><a href="time-series.html">時間序列是什麼</a></li><li><a href="white-noise.html">白噪音</a></li><li><a href="random-walk.html">隨機漫步</a></li><li><a href="stationarity.html" aria-current="page">平穩性</a></li></ul>
+      
+      <h3>工具</h3>
+      <ul><li><a href="autocorrelation.html">自相關</a></li></ul>
+      
+      <h3>模型</h3>
+      <ul><li><a href="ar-model.html">AR 模型</a></li></ul>
+      
+    </nav>
+  </aside>
+</div>
+
+<footer class="site-footer">
+  <p>本站僅供學習時間序列分析之用，所有圖表皆為固定種子的模擬資料，不構成任何投資建議。</p>
+  <p>© 2026 時間序列白話 Wiki。頁面由 AI 依專案中的 AGENTS.md 規則整理。</p>
+</footer>
+<script src="../assets/lab.js"></script>
+<script src="../demos/stationarity.js"></script>
+</body>
+</html>

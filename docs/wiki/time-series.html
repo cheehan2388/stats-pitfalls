@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>時間序列是什麼｜時間序列白話 Wiki</title>
+<meta name="description" content="按照時間先後排好的一串數字。順序本身就是資訊，打亂就失去意義。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@700;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header class="site-header">
+  <a class="site-name" href="../index.html">時間序列白話 Wiki</a>
+  <nav aria-label="主要導覽">
+    <a href="../index.html#path">學習路線</a>
+    <a href="../index.html#wanted">待寫清單</a>
+    <a href="../log.html">更新紀錄</a>
+  </nav>
+</header>
+
+<div class="layout">
+  <main class="article">
+    <header class="specimen">
+      <p class="specimen-cat"><a href="../index.html#path">學習路線</a> 第 1 站，共 6 站</p>
+      <h1>時間序列是什麼</h1>
+      <p class="specimen-en">Time Series</p>
+      <dl class="specimen-facts">
+        <div><dt>類型</dt><dd>概念</dd></div>
+        <div><dt>難度</dt><dd><span class="level"><i class="on"></i><i class=""></i><i class=""></i><span>入門</span></span></dd></div>
+        <div><dt>建議先讀</dt><dd>不需要，可以直接讀</dd></div>
+        <div><dt>最後更新</dt><dd>2026-11-16</dd></div>
+      </dl>
+    </header>
+
+    <article class="prose">
+      <h2 id="s1">一句話</h2>
+<p>時間序列就是按照時間順序記錄下來的一串數字，而且先後順序不能打亂。</p>
+<h2 id="s2">生活中的比喻</h2>
+<p>你每天早上量體重，寫在日曆上。一年下來有 365 個數字。</p>
+<p>把這些數字倒進袋子裡搖一搖再拿出來，你還是知道平均體重和最重、最輕是多少。但你再也看不出「過年那週胖了兩公斤」「夏天慢慢瘦下來」。這些故事藏在順序裡。</p>
+<p>對應到資料上：一般的統計只關心「有哪些數字」，時間序列分析關心的是「數字出現的先後」。</p>
+<h2 id="s3">它到底在說什麼</h2>
+<p>時間序列（time series）是同一件事情在不同時間點的觀察值，通常間隔固定：每天、每小時、每分鐘。</p>
+<p>它和一般資料最大的差別，是相鄰的數字通常互相有關。今天的氣溫和昨天很接近，這個月的業績和上個月有關。這種「和自己的過去有關」的性質叫做 <a class="wl" href="autocorrelation.html">自相關</a>，是整個時間序列分析的核心。</p>
+<p>分析一條時間序列，大致是在把它拆成幾個部分：</p>
+<ul>
+<li><strong>趨勢</strong>：長期往上或往下的方向。</li>
+<li><strong>季節性</strong>：固定週期重複出現的起伏，例如每到週末人潮變多。</li>
+<li><strong>有規律的短期波動</strong>：被推離平常水準之後，慢慢回來的過程。<a class="wl" href="ar-model.html">AR 模型</a> 描述的就是這個。</li>
+<li><strong>雜訊</strong>：完全無法預測的部分，也就是 <a class="wl" href="white-noise.html">白噪音</a>。</li>
+</ul>
+<p>時間序列模型的工作，就是把前三種有規律的部分找出來。找完之後剩下的東西如果只是雜訊，代表能用的資訊已經拿完了。</p>
+<h2 id="s4">量化交易怎麼用</h2>
+<p>價格、成交量、資金費率、買賣價差，全部都是時間序列。量化交易的基本問題是：過去的資料裡，有沒有關於未來的資訊？</p>
+<p>實務上很少直接分析價格本身，而是先把價格換成 <span class="wl wanted" title="這一頁還沒寫">報酬率</span>（每一期漲跌的百分比）。原因在 <a class="wl" href="stationarity.html">平穩性</a> 那一頁：價格的水準會一直漂移，大部分統計工具用在上面會得到錯誤的結論。</p>
+<div class="admonition quant">
+<p class="admonition-title">它能告訴你什麼、不能告訴你什麼</p>
+<p><strong>能</strong>：把一條序列拆成「有規律的部分」和「雜訊」，並且衡量規律有多強、能持續多久。</p>
+<p><strong>不能</strong>：保證過去的規律在未來繼續存在。模型只描述它看過的資料；市場的參與者和規則改變時，規律可能直接消失。</p>
+</div>
+<h2 id="s5">常見誤解</h2>
+<div class="admonition myth">
+<p class="admonition-title">資料越多筆，分析就越可靠</p>
+<p>時間序列的資料彼此相關，1,000 個高度相關的數字，包含的資訊可能只相當於幾十個獨立的數字。而且時間拉得越長，越可能跨過市場規則已經改變的時期，把兩種不同的狀況混在一起算。</p>
+</div>
+<div class="admonition myth">
+<p class="admonition-title">圖上看得出形狀，就代表有規律</p>
+<p>人的眼睛很擅長在雜訊裡看出形狀。<a class="wl" href="random-walk.html">隨機漫步</a> 那一頁的實驗會讓你看到，純粹丟銅板也能畫出很像「趨勢」的線。</p>
+</div>
+    </article>
+
+    <section class="sources">
+      <h2>這一頁的內容來源</h2>
+      <ul><li>教科書通識</li></ul>
+    </section>
+
+    <nav class="pager" aria-label="上一站與下一站">
+      <span></span>
+      <a class="pager-next" href="white-noise.html"><span>下一站</span>白噪音</a>
+    </nav>
+  </main>
+
+  <aside class="sidebar">
+    <nav aria-label="本頁段落">
+      <h2>本頁段落</h2>
+      <ol><li><a href="#s1">一句話</a></li><li><a href="#s2">生活中的比喻</a></li><li><a href="#s3">它到底在說什麼</a></li><li><a href="#s4">量化交易怎麼用</a></li><li><a href="#s5">常見誤解</a></li></ol>
+    </nav>
+    <nav aria-label="誰提到這一頁">
+      <h2>誰提到這一頁</h2>
+      <ul><li><a href="white-noise.html">白噪音</a></li></ul>
+      
+    </nav>
+    <nav aria-label="所有頁面">
+      <h2>所有頁面</h2>
+      
+      <h3>概念</h3>
+      <ul><li><a href="time-series.html" aria-current="page">時間序列是什麼</a></li><li><a href="white-noise.html">白噪音</a></li><li><a href="random-walk.html">隨機漫步</a></li><li><a href="stationarity.html">平穩性</a></li></ul>
+      
+      <h3>工具</h3>
+      <ul><li><a href="autocorrelation.html">自相關</a></li></ul>
+      
+      <h3>模型</h3>
+      <ul><li><a href="ar-model.html">AR 模型</a></li></ul>
+      
+    </nav>
+  </aside>
+</div>
+
+<footer class="site-footer">
+  <p>本站僅供學習時間序列分析之用，所有圖表皆為固定種子的模擬資料，不構成任何投資建議。</p>
+  <p>© 2026 時間序列白話 Wiki。頁面由 AI 依專案中的 AGENTS.md 規則整理。</p>
+</footer>
+<script src="../assets/lab.js"></script>
+
+</body>
+</html>

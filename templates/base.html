@@ -11,17 +11,18 @@
 <link rel="stylesheet" href="{{ root }}assets/style.css">
 </head>
 <body>
-<div class="hazard-strip" aria-hidden="true"></div>
 <header class="site-header">
   <a class="site-name" href="{{ root }}index.html">{{ site_title }}</a>
-  <nav aria-label="分類">
-    {% for cat, ps in groups %}<a href="{{ root }}index.html#cat-{{ loop.index }}">{{ cat }}</a>{% endfor %}
+  <nav aria-label="主要導覽">
+    <a href="{{ root }}index.html#path">學習路線</a>
+    <a href="{{ root }}index.html#wanted">待寫清單</a>
+    <a href="{{ root }}log.html">更新紀錄</a>
   </nav>
 </header>
 {% block body %}{% endblock %}
 <footer class="site-footer">
-  <p>本站內容僅供學習統計方法之用，所有圖表皆為固定種子的模擬資料，不構成任何投資建議。</p>
-  <p>© {{ year }} {{ site_title }}。新增內容的規則請見專案中的 AGENTS.md。</p>
+  <p>本站僅供學習時間序列分析之用，所有圖表皆為固定種子的模擬資料，不構成任何投資建議。</p>
+  <p>© {{ year }} {{ site_title }}。頁面由 AI 依專案中的 AGENTS.md 規則整理。</p>
 </footer>
 <script src="{{ root }}assets/lab.js"></script>
 {% block scripts %}{% endblock %}

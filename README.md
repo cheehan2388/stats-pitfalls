@@ -1,33 +1,36 @@
-# 統計方法踩雷圖鑑
+# 時間序列白話 Wiki
 
-一頁拆解一個常用在市場資料上的統計方法：它假設了什麼、哪裡會壞掉、可以改用什麼。
-每頁都有一個可以自己拖拉參數的互動實驗。
+用白話把時間序列的觀念和模型講一遍，再說明它在量化交易裡拿來做什麼。
+這是一個 LLM Wiki：擁有者丟進知識點，AI 依照固定規則整理成頁面並維護連結。
 
-目前收錄：z-score 離群偵測、移動平均、布林通道、皮爾森相關係數。
+網站：https://cheehan2388.github.io/stats-pitfalls/
 
-## 這個專案的重點
+## 運作方式
 
-這不是一個「做完就結束」的網頁，而是一套可以持續擴充的規則：
+| 你做的事 | AI 做的事 |
+|---|---|
+| 在對話中貼一個知識點，或把筆記放進 `raw/` 後說「收錄」 | 確認範圍、找既有頁面、寫成固定六段的頁面、接上連結、記錄到 log、建置 |
+| 問一個問題 | 以 Wiki 內容回答並指出來源頁面，再問你要不要收錄 |
+| 說「健檢」 | 檢查矛盾、孤兒頁、待寫清單，只回報不擅自修改 |
 
-- **[AGENTS.md](./AGENTS.md)**：寫給 AI 助理的專案規則，包含目的、結構、內容格式、命名方式與修改守則。
-- **`build.py`**：把規則變成可執行的檢查。欄位缺漏、段落順序錯誤、找不到互動實驗時，建置會失敗並說明原因。
-- **`content/_template.md`**：新頁面的起點。
+規則全部寫在 **[AGENTS.md](./AGENTS.md)**，並由 `build.py` 強制檢查：
+段落順序、字數上限、連結數量、來源欄位、禁用字眼，任何一項不符合，建置就會失敗。
 
-要新增一頁，只要對 AI 說「依照 AGENTS.md 新增一篇線性迴歸」，它就會建立
-`content/methods/linear-regression.md` 與 `demos/linear-regression.js`，首頁、分類與目錄會自動更新。
+## 結構
+
+- `wiki/`：每個知識點一個 Markdown 檔，`log.md` 是更新紀錄
+- `demos/`：互動實驗
+- `raw/`：原始筆記（AI 只讀不改）
+- `docs/`：建置輸出，由 GitHub Pages 發布
 
 ## 本機執行
 
 ```bash
 pip install -r requirements.txt
-python build.py                      # 檢查內容並產生 docs/
-python -m http.server -d docs 8000   # 開啟 http://localhost:8000
+python build.py
+python -m http.server -d docs 8000
 ```
-
-## 發布
-
-GitHub Pages：Settings → Pages → Source 選 **Deploy from a branch**，Branch 選 `main`、資料夾選 `/docs`。
 
 ## 聲明
 
-所有圖表都是固定亂數種子的模擬資料。本站僅供學習統計方法，不構成投資建議。
+所有圖表都是固定亂數種子的模擬資料。本站僅供學習，不構成投資建議。

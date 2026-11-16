@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>隨機漫步｜時間序列白話 Wiki</title>
+<meta name="description" content="每一步都隨機，但位置是累加的。純粹靠運氣，也能走出看起來像趨勢的路線。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@700;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header class="site-header">
+  <a class="site-name" href="../index.html">時間序列白話 Wiki</a>
+  <nav aria-label="主要導覽">
+    <a href="../index.html#path">學習路線</a>
+    <a href="../index.html#wanted">待寫清單</a>
+    <a href="../log.html">更新紀錄</a>
+  </nav>
+</header>
+
+<div class="layout">
+  <main class="article">
+    <header class="specimen">
+      <p class="specimen-cat"><a href="../index.html#path">學習路線</a> 第 3 站，共 6 站</p>
+      <h1>隨機漫步</h1>
+      <p class="specimen-en">Random Walk</p>
+      <dl class="specimen-facts">
+        <div><dt>類型</dt><dd>概念</dd></div>
+        <div><dt>難度</dt><dd><span class="level"><i class="on"></i><i class=""></i><i class=""></i><span>入門</span></span></dd></div>
+        <div><dt>建議先讀</dt><dd><a href="white-noise.html">白噪音</a></dd></div>
+        <div><dt>最後更新</dt><dd>2026-11-16</dd></div>
+      </dl>
+    </header>
+
+    <article class="prose">
+      <h2 id="s1">一句話</h2>
+<p>隨機漫步是把一連串隨機的小步伐加總起來的結果：每一步無法預測，位置卻會越漂越遠。</p>
+<h2 id="s2">生活中的比喻</h2>
+<p>一個喝醉的人從路燈下出發，每一步隨機往左或往右。</p>
+<p>他的每一步都沒有方向可言。但一小時後你去找他，他通常不在路燈下，而是在離路燈有一段距離的地方。因為他的位置是所有步伐的累積，往左多走的那幾步不會自動被補回來。</p>
+<p>如果把他的路線畫出來，你會看到好幾段「一路往右」的路程，看起來很像他有目的地。其實沒有。</p>
+<p>對應到資料上：每一步是 <a class="wl" href="white-noise.html">白噪音</a>，位置就是隨機漫步。</p>
+<h2 id="s3">它到底在說什麼</h2>
+<p>隨機漫步（random walk）的規則只有一條：今天的位置，等於昨天的位置加上一個隨機的變動。</p>
+<pre><code class="language-formula">Pₜ = Pₜ₋₁ + εₜ
+</code></pre>
+<ul>
+<li><strong>Pₜ</strong>：今天的位置。</li>
+<li><strong>Pₜ₋₁</strong>：昨天的位置。</li>
+<li><strong>εₜ</strong>：今天的隨機變動，是白噪音。</li>
+</ul>
+<p>這條規則帶來三個後果：</p>
+<ul>
+<li><strong>對明天最好的猜測就是今天</strong>。變動的平均是 0，所以沒有理由猜更高或更低。</li>
+<li><strong>每一次變動都永久留下來</strong>。它不會被拉回某個「正常水準」，因為根本沒有正常水準。這和 <a class="wl" href="ar-model.html">AR 模型</a> 正好相反。</li>
+<li><strong>時間越久，可能的位置範圍越大</strong>。所以隨機漫步不符合 <a class="wl" href="stationarity.html">平穩性</a>。</li>
+</ul>
+<p>把相鄰兩天的位置相減，得到的就是當天的變動 εₜ，又回到白噪音。這個「相減」的動作叫做 <span class="wl wanted" title="這一頁還沒寫">差分</span>。</p>
+<h2 id="s4">親手試試看</h2>
+<p>先看預設的第 1 條路徑。上面那張圖是位置，下面是每一步的大小。然後拖動「換一條路徑」，多看幾條。每一條的每一步都是公平的隨機數，注意它們畫出來的形狀差多少。</p>
+<div class="lab" id="lab" data-demo="random-walk"><noscript>這個互動實驗需要開啟 JavaScript。</noscript></div>
+<p>第 1 條路徑有 55% 的步伐往上，最長連續往上 8 步，最後停在 +18.1。只看上面那張圖，很容易說它「處於上升趨勢」。但下面那張圖顯示每一步之間的相關只有 0.04，也就是互不相干。</p>
+<h2 id="s5">量化交易怎麼用</h2>
+<p>隨機漫步是價格最基本的對照模型：如果價格是隨機漫步，那麼只看過去的價格就無法預測未來的漲跌。</p>
+<p>所以它是一個起點。任何宣稱能預測價格的方法，都應該先證明它比「假設價格是隨機漫步」來得好。實務上的做法是產生很多條隨機漫步，把同一套策略放上去跑。如果策略在隨機漫步上也能「賺錢」，那個獲利就是算錯或運氣，不是優勢。</p>
+<div class="admonition quant">
+<p class="admonition-title">它能告訴你什麼、不能告訴你什麼</p>
+<p><strong>能</strong>：提供一個「完全沒有可預測性」的基準，用來檢驗策略和指標是不是在雜訊裡看到了不存在的規律。</p>
+<p><strong>不能</strong>：證明真實的價格就是隨機漫步。真實價格大致接近，但波動的大小會隨時間變化，短期也可能有微弱的相關。這些差異正是量化研究在找的東西。</p>
+</div>
+<h2 id="s6">常見誤解</h2>
+<div class="admonition myth">
+<p class="admonition-title">圖上有趨勢、有支撐和壓力，代表價格可以預測</p>
+<p>實驗中的每一條路徑都是純粹的隨機數，一樣畫得出趨勢線、整理區間和「突破」。圖形看起來有規律，不能當作有規律的證據。</p>
+</div>
+<div class="admonition myth">
+<p class="admonition-title">連續漲了很多天，接下來該跌了</p>
+<p>隨機漫步沒有記憶，也沒有要回去的地方。連續往上 8 步之後，下一步往上的機率還是一半。</p>
+</div>
+    </article>
+
+    <section class="sources">
+      <h2>這一頁的內容來源</h2>
+      <ul><li>教科書通識</li></ul>
+    </section>
+
+    <nav class="pager" aria-label="上一站與下一站">
+      <a class="pager-prev" href="white-noise.html"><span>上一站</span>白噪音</a>
+      <a class="pager-next" href="stationarity.html"><span>下一站</span>平穩性</a>
+    </nav>
+  </main>
+
+  <aside class="sidebar">
+    <nav aria-label="本頁段落">
+      <h2>本頁段落</h2>
+      <ol><li><a href="#s1">一句話</a></li><li><a href="#s2">生活中的比喻</a></li><li><a href="#s3">它到底在說什麼</a></li><li><a href="#s4">親手試試看</a></li><li><a href="#s5">量化交易怎麼用</a></li><li><a href="#s6">常見誤解</a></li></ol>
+    </nav>
+    <nav aria-label="誰提到這一頁">
+      <h2>誰提到這一頁</h2>
+      <ul><li><a href="ar-model.html">AR 模型</a></li><li><a href="stationarity.html">平穩性</a></li><li><a href="time-series.html">時間序列是什麼</a></li></ul>
+      
+    </nav>
+    <nav aria-label="所有頁面">
+      <h2>所有頁面</h2>
+      
+      <h3>概念</h3>
+      <ul><li><a href="time-series.html">時間序列是什麼</a></li><li><a href="white-noise.html">白噪音</a></li><li><a href="random-walk.html" aria-current="page">隨機漫步</a></li><li><a href="stationarity.html">平穩性</a></li></ul>
+      
+      <h3>工具</h3>
+      <ul><li><a href="autocorrelation.html">自相關</a></li></ul>
+      
+      <h3>模型</h3>
+      <ul><li><a href="ar-model.html">AR 模型</a></li></ul>
+      
+    </nav>
+  </aside>
+</div>
+
+<footer class="site-footer">
+  <p>本站僅供學習時間序列分析之用，所有圖表皆為固定種子的模擬資料，不構成任何投資建議。</p>
+  <p>© 2026 時間序列白話 Wiki。頁面由 AI 依專案中的 AGENTS.md 規則整理。</p>
+</footer>
+<script src="../assets/lab.js"></script>
+<script src="../demos/random-walk.js"></script>
+</body>
+</html>
